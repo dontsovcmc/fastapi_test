@@ -1,6 +1,8 @@
 name: Deploy
 
-on: [push]
+on:
+  push:
+    branches: main
 
 # on: push: branches: - master
 jobs:
@@ -10,30 +12,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-
-      - name: Check out repository code
-        uses: actions/checkout@v3
-        with: 
-          ref: main
-
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
-
-      #- name: Run unit tests
-      #  run: python -m pytest --import-mode=append tests/
-
-      - name: Executing remote command
+      - name: Executing git pull
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
-          script: docker build -t fastapi_test_image /home/vpn/fastapi_test | docker stop fastapi_test_container | docker run -d --name fastapi_test_container -p 8000:8000 fastapi_test_image 
+          script: cd ./fastapi_test && git pull
+
+      - name: Executing build
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          script: docker-compose -f docker-compose.yml build
+
+      - name: Executing up
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          script: docker-compose -f docker-compose.yml up -d
