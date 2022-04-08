@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Executing git pull
+      - name: git pull
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           script: cd ./fastapi_test && git pull
 
-      - name: Executing build
+      - name: build
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -30,7 +30,7 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           script: docker-compose -f docker-compose.yml build
 
-      - name: Executing up
+      - name: up
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
