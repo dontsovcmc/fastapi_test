@@ -21,18 +21,18 @@ jobs:
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
-      with:
-        source: "."
-        target: "/home/${{ secrets.USERNAME }}/fastapi_test"
+        with:
+          source: "."
+          target: "/home/${{ secrets.USERNAME }}/fastapi_test"
 
       - name: Docker-compose build & up
         uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        port: ${{ secrets.PORT }}
-        key: ${{ secrets.SSHKEY }}
-        script_stop: true
-        script: |
-          docker-compose -f ./fastapi_test/docker-compose.yml build
-          docker-compose -f ./fastapi_test/docker-compose.yml up -d
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          script_stop: true
+          script: |
+            docker-compose -f ./fastapi_test/docker-compose.yml build
+            docker-compose -f ./fastapi_test/docker-compose.yml up -d
