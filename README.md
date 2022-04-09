@@ -5,8 +5,6 @@ FastAPI, Docker, GitHub Actions with deploy to private VPS
 Запускается в докер контейнере на виртуальном сервере (VPS).
 Обновляем код и перезапускаем докер контейнер при коммите в ветку main репозитория на GitHub, используя технологию GitHub Actions.
 
-
-
 # VPS setup
 
 ## Ставим на сервер docker-compose
@@ -69,4 +67,6 @@ b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAACFwAAAAdzc2gtcn
 `https://github.com/<username>/<repo>/settings/secrets/actions`
 
 имя переменной: SSHKEY
+
+Теперь GitHub может заходить по ssh на VPS.
 
