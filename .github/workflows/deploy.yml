@@ -19,6 +19,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
-      - run: cd ./fastapi_test && git pull
-      - run: docker-compose -f docker-compose.yml build
-      - run: docker-compose -f docker-compose.yml up -d
+          script_stop: true
+          script: |
+            cd ./fastapi_test && git pull
+            docker-compose -f docker-compose.yml build
+            docker-compose -f docker-compose.yml up -d
