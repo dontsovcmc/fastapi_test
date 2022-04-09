@@ -1,55 +1,62 @@
 # fastapi_test
 FastAPI, Docker, GitHub Actions with deploy to private VPS
 
-
-# Init
-
-1. Build image
-
-docker-compose build
-
-2. Run container
-
-docker-compose up -d
-
-3. Check
-
-curl http://127.0.0.1:8000/ 
-
-return
-
-{"Hello":"World"}
-
-
-
-Stop container
-
-docker ps -a -q --filter="name=fastapi_test_container"
-
-
-docker restart fastapi_test_container
+Есть программа - веб сервер. 
+Запускается в докер контейнере на виртуальном сервере (VPS).
+Обновляем код и перезапускаем докер контейнер при коммите в ветку main репозитория на GitHub, используя технологию GitHub Actions.
 
 
 
 # VPS setup
 
+## Ставим на сервер docker-compose
+
+https://docs.docker.com/compose/install/
+
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+```
+
+https://docs.docker.com/engine/install/linux-postinstall/ 
+
+```
+sudo groupadd docker
+sudo usermod -aG docker $USER
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+```
+
+# Настройка GitHub Actions
+
+## Настраиваем Secrets
+
+Для работы потребуется:
+HOST - указываем ip адрес VPS
+USERNAME - указываем имя пользователя VPS
+SSHKEY - указываем приватный ssh ключ. его создание описано ниже
+
+### Делаем доступ по ssh на VPS
+
+0. Заходим на VPS
+
+`ssh <user>@<ip>`
+
 1. Создаем ssh ключ для github
 
-ssh-keygen -t rsa -b 4096 -C "<email>"
+`ssh-keygen -t rsa -b 4096 -C "<email>"`
 
-2. назовём файл 
+назовём файл github
+без фразы without pass phrase
 
-github
+2. записываем публичный ключ в список доступа
 
-3. без пароля
+`cat github.pub >> ~/.ssh/authorized_keys`
 
-without pass phrase
+5. Печатаем и копируем в буфер приватный ключ
 
-4. записываем публичный ключ в список доступа
-
-cat github.pub >> ~/.ssh/authorized_keys
-
-5. cat github - печатаем и копируем в буфер приватный ключ
+`cat github`
 
 -----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAACFwAAAAdzc2gtcn
@@ -58,8 +65,8 @@ b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAACFwAAAAdzc2gtcn
 -----END OPENSSH PRIVATE KEY-----
 
 6. Добавляем ключ в github secrets
-https://github.com/dontsovcmc/fastapi_test/settings/secrets/actions
+
+`https://github.com/<username>/<repo>/settings/secrets/actions`
 
 имя переменной: SSHKEY
 
-7. 
