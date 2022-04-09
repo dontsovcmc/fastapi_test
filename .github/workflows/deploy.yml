@@ -19,22 +19,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
-          script: cd ./fastapi_test && git pull
-
-      - name: build
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.SSHKEY }}
-          script: docker-compose -f docker-compose.yml build
-
-      - name: up
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.SSHKEY }}
-          script: docker-compose -f docker-compose.yml up -d
+      - run: cd ./fastapi_test && git pull
+      - run: docker-compose -f docker-compose.yml build
+      - run: docker-compose -f docker-compose.yml up -d
