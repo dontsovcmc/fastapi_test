@@ -5,6 +5,30 @@ FastAPI, Docker, GitHub Actions with deploy to private VPS
 Запускается в докер контейнере на виртуальном сервере (VPS).
 Обновляем код и перезапускаем докер контейнер при коммите в ветку main репозитория на GitHub, используя технологию GitHub Actions.
 
+### Команды docker
+
+На сервере для проверки удобно использовать следующие команды:
+
+#### посмотреть логи всех контейнеров докера
+выполнять в папке с docker-compose.yml файлом
+
+`
+docker-compose logs -f
+`
+
+#### посмотреть список контейнеров 
+выполнять в папке с docker-compose.yml файлом
+
+`
+docker-compose ps
+`
+
+#### подключиться к командной строке контейнера
+
+`
+docker exec -it <container_name> bash
+`
+
 # VPS setup
 
 ## Ставим на сервер docker-compose
@@ -28,12 +52,14 @@ sudo systemctl enable containerd.service
 
 # Настройка GitHub Actions
 
-## Настраиваем Secrets
+## Первичная настройка Secrets
 
 Для работы потребуется:
+```
 HOST - указываем ip адрес VPS
 USERNAME - указываем имя пользователя VPS
 SSHKEY - указываем приватный ssh ключ. его создание описано ниже
+```
 
 ### Делаем доступ по ssh на VPS
 
